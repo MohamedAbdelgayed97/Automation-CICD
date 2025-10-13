@@ -46,7 +46,7 @@ public class BaseTest {
             if (browserName.contains("headless")) options.addArguments("--headless=new");
             driver = new ChromeDriver(options);
             driver.manage().window().setSize(new Dimension(1440, 900));
-        } else if (browserName.equalsIgnoreCase("edge")) {
+        } /*else if (browserName.equalsIgnoreCase("edge")) {
             try {
                 WebDriverManager.edgedriver().setup();
                 driver = new EdgeDriver();
@@ -54,9 +54,23 @@ public class BaseTest {
                 System.out.println("⚠ WebDriverManager failed for Edge, using local driver instead...");
                 System.setProperty("webdriver.edge.driver",
                         System.getProperty("user.dir") + "\\drivers\\msedgedriver.exe");
-                driver = new EdgeDriver();
+                driver = new EdgeDriver(); */
+        else if (browserName.equalsIgnoreCase("edge")) {
+            String edgePath = System.getProperty("user.dir") + "\\drivers\\msedgedriver.exe";
+            File f = new File(edgePath);
+            if (!f.exists()) {
+                throw new RuntimeException("EdgeDriver not found at: " + edgePath +
+                        " — ضع msedgedriver.exe (الإصدار المطابق للمتصفح) داخل مجلد drivers بالمشروع.");
             }
-        } else {
+            System.setProperty("webdriver.edge.driver", edgePath);
+
+            // لو عايز تضيف خيارات:
+            // EdgeOptions edgeOptions = new EdgeOptions();
+            // driver = new EdgeDriver(edgeOptions);
+            driver = new EdgeDriver();
+
+            }
+         else {
             throw new RuntimeException("Browser not supported: " + browserName);
         }
 
